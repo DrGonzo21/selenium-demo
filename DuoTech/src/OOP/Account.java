@@ -45,10 +45,7 @@ public abstract class Account implements BasInterestRate {
     }
 
     public void showInfo() {
-        System.out.println("NAME: " + name);
-        System.out.println("SSN: " + ssn);
-        System.out.println("ACCOUNT NUMBER: " + accountNumber);
-        System.out.println("ROUTING NUMBER: " + routingNumber);
-        System.out.println("BALANCE: $" + balance);
+        System.out.println("Name: " + name + "\nSNN: " + ssn + "\nACCOUNT NUMBER: " + accountNumber + "\nROUTING NUMBER: " + routingNumber + "\nBALANCE: $" + balance);
+
     }
 }

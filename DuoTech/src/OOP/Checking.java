@@ -33,9 +33,7 @@ public class Checking extends Account {
     @Override
     public void showInfo() {
         super.showInfo();
-        System.out.println("ACCOUNT TYPE: Checking");
-        System.out.println("DEBIT CARD NUMBER: " + debitCardNo);
-        System.out.println("DEBIT CARD PIN: " + debitCardPIN);
-        System.out.println("INTEREST RATE: " + interestRate + "%");
+        System.out.println("ACCOUNT TYPE: CHECKING " + "\nDEBIT CARD NUMBER: " + debitCardNo + "\nDEBIT CARD PIN: " + debitCardPIN + "\nINTEREST RATE: " + interestRate + "%");
+
     }
 }

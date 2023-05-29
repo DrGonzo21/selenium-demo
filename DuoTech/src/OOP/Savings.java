@@ -32,9 +32,7 @@ public class Savings extends Account {
     @Override
     public void showInfo() {
         super.showInfo();
-        System.out.println("ACCOUNT TYPE: Savings");
-        System.out.println("SAFETY DEPOSIT BOX ID: " + safetyDepositBoxID);
-        System.out.println("SAFETY DEPOSIT BOX PIN: " + safetyDepositBoxPin);
-        System.out.println("INTEREST RATE: " + interestRate + "%");
+        System.out.println("ACCOUNT TYPE: Savings " + "\nSAFETY DEPOSIT BOX ID: " + safetyDepositBoxID + "\nSAFETY DEPOSIT BOX PIN: " + safetyDepositBoxPin + "\nINTEREST RATE: " + interestRate + "%");
+
     }
 }
