@@ -14,7 +14,7 @@ public class Sreams {
 
     }
     public static Map<String, Integer> wordLen(List<String> words){
-        
+
         Map<String, Integer> stringLengthMap = new HashMap<>();
 
         words.forEach(str -> stringLengthMap.putIfAbsent(str, str.length()));
