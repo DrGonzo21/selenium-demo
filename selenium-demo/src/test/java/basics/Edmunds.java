@@ -9,7 +9,9 @@ import org.testng.Assert;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -35,12 +37,13 @@ public class Edmunds {
             modelSelect.selectByValue("Model 3");
             Thread.sleep(1500);
 
-            // Set minimum year and select "certified" option
+            // Set minimum year and select "Only show local listings" option
             driver.findElement(By.cssSelector("input[name='min-value-input']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE, "2020", Keys.ENTER);
-            driver.findElement(By.xpath("//*[@id=\"main-content\"]/div/div[3]/div[1]/div[2]/div[2]/div[2]/fieldset/fieldset[2]/div/ul/li[2]/label/span[1]")).click();
-            Thread.sleep(1500);
+            driver.findElement(By.xpath("(//span[@class='name ml-0_5'])[2]")).click();
+
 
             // Get search results count
+            Thread.sleep(2000);
             WebElement resultsElement = driver.findElement(By.cssSelector("span.inventory-count"));
             String results = resultsElement.getText();
             System.out.println("Results: " + results);
@@ -56,6 +59,7 @@ public class Edmunds {
             Assert.assertTrue(atLeastOneListingContainsModel3, "No listing contains 'Model 3'");
 
             // Get model years and check if all are within the range
+            Thread.sleep(1500);
             List<String> modelYears = listings.stream()
                     .map(listing -> listing.findElement(By.xpath("//div[@class='size-16 font-weight-bold mb-0_5 text-blue-50']")))
                     .map(WebElement::getText)
@@ -103,20 +107,25 @@ public class Edmunds {
             Select milage = new Select(driver.findElement(By.id("sort-by")));
             milage.selectByValue("mileage:asc");
 
-            List<WebElement> mileageElements = driver.findElements(By.xpath("//*[@id=\"main-content\"]/div/div[3]/div[1]/div[1]/ul/li[1]/div/div[2]/div/div[2]/div[1]"));
+            List<WebElement> mileageElements = driver.findElements(By.xpath("//div[@class='key-point size-14 d-flex align-items-baseline mt-0_5 col-12']//span[@title='Car Mileage']"));
 
-            List<Integer> mileageValues = mileageElements.stream()
-                    .map(WebElement::getText)
-                    .map(mileageText -> mileageText.replaceAll("\\D", ""))
-                    .map(Integer::parseInt)
-                    .toList();
+            Thread.sleep(2000);
 
-            boolean mileageInAscendingOrder = IntStream.range(0, mileageValues.size() - 1)
-                    .allMatch(i -> mileageValues.get(i) <= mileageValues.get(i + 1));
+            List<Integer> mileageValues = new ArrayList<>();
 
-            Assert.assertTrue(mileageInAscendingOrder, "Mileage values are not in ascending order");
+            // Retrieve the mileage values from the web page
+            driver.findElements(By.xpath("//a[@data-linkname='vehicle-listing']//div[@class='mileage']"))
+                    .forEach(element -> {
+                        String mileageText = element.getText().replaceAll("\\D", "");
+                        int mileage = Integer.parseInt(mileageText);
+                        mileageValues.add(mileage);
+                    });
 
+            // Verify if mileage values are sorted in ascending order
+            List<Integer> expectedMileageValues = new ArrayList<>(mileageValues);
+            expectedMileageValues.sort(Comparator.naturalOrder());
 
+            Assert.assertEquals(mileageValues, expectedMileageValues);
             List<WebElement> carList = driver.findElements(By.xpath("//a[@class='usurp-inventory-card-vdp-link']"));
 
             // Scroll to the last element
@@ -131,11 +140,11 @@ public class Edmunds {
             lastElement.click();
 
             // Retrieve the mileage and cost on the new page
-            WebElement mileageElement = driver.findElement(By.xpath("/html/body/div[1]/div/main/div[1]/div[1]/div/div[1]/div[4]/div/div[1]/div/div[1]/section/div/ul[1]/li[1]/div[2]"));
+            WebElement mileageElement = driver.findElement(By.xpath("(//div[@class='pr-0 font-weight-bold text-right ml-1 col'])[1]"));
             String lastElementMileageText = mileageElement.getText();
             int lastElementMileage = Integer.parseInt(lastElementMileageText.replaceAll("\\D", ""));
 
-            WebElement costElement = driver.findElement(By.xpath("/html/body/div[1]/div/main/div[1]/div[1]/div/div[2]/div/div/div/div/div[1]/div/div[1]/div[1]/div/span"));
+            WebElement costElement = driver.findElement(By.xpath("//span[@data-testid='vdp-price-row']"));
             String lastElementCostText = costElement.getText();
             int lastElementCost = Integer.parseInt(lastElementCostText.replaceAll("\\D", ""));
 
@@ -145,6 +154,7 @@ public class Edmunds {
             System.out.println("Last Element Href: " + lastElementHref);
             System.out.println("Last Element Mileage: " + lastElementMileage);
             System.out.println("Last Element Cost: " + lastElementCost);
+            Thread.sleep(5000);
 
 
 
