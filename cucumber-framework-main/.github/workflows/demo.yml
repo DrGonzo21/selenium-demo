@@ -1,9 +1,11 @@
-name: Actions Demo
+name: GitHub Actions Demo
 run-name: Testing GitHub Actions
 
 on:
   push:
-     branches: [main]
+    branches:
+        - main
+
 jobs:
     sample-job:
       runs-on: ubuntu-latest
