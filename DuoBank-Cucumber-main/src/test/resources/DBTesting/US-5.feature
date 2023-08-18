@@ -1,6 +1,8 @@
+
+@DB
 Feature: Employment and income details
 
-  @DB
+
   Scenario: verify column names for tbl_mortgage table
     When I retrieve the column names from the "tbl_mortagage" table
     Then it should have the following
@@ -32,7 +34,7 @@ Feature: Employment and income details
       | income_source          |
       | amount                 |
 
-  @DB
+
   Scenario: Verify income source
     When I send a query to retrieve income_source from the db
     Then The result should contain the following sources
@@ -44,7 +46,7 @@ Feature: Employment and income details
       | Royalty Payments                  |
       | Other Types of Income             |
 
-    @DB @today
+
     Scenario Outline: Verify employer_name and gross_monthly_income columns should be required and not empty
       When I send a query to retrieve "<column>" from DB
       Then These columns should not be empty
